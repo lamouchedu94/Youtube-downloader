@@ -10,5 +10,5 @@ Youtube_Downloader_limited_without_ffmpeg utilise pytube, mais on ne peut télé
 # Nouveautées 🆕
 * Les versions supérieurs à la v0.4 peuvent être utilisées sans ffmpeg 
 * La v0.6-GUI, v0.5-GUI et la v0.4-GUI peuvent utiliser le gpu pour ré-encoder les vidéos !
-* La v0.6-GUI créer un fichier dans lequel est écrit l'historique des vidéos téléchargés !
+* La v0.6-GUI créer un fichier dans lequel est écrit l'historique des vidéos téléchargés !(accessible depuis l'onglet fichier > consulter l'historique)
 
