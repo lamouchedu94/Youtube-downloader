@@ -7,9 +7,10 @@ Youtube_Downloader_with_ffmpeg utilise pytube et ffmpeg (il faut le télécharge
 
 Youtube_Downloader_limited_without_ffmpeg utilise pytube, mais on ne peut télécharger que des vidéos en 360p et 720p avec le son.
 
-Pour utiliser ffmpeg merci de le télécharger (https://ffmpeg.org/download.html) et mettre les .exe dans le même répertoire que le programme.
+Pour utiliser ffmpeg merci de le télécharger (https://ffmpeg.org/download.html) et mettre les .exe dans le même répertoire que le programme.(les .exe sont : ffmpeg, ffplay et ffprobe) 
 
 ⚠️Il faut au minimum la version v10.8.2 de pytube (ou supérieur) pour fonctioner.
+
 ⚠️Les .exe des versions antérieur à la v0.7.1-GUI ne fonctionne plus ! (pytube pas à jour)
 
 # Nouveautées 🆕
@@ -20,3 +21,4 @@ Pour utiliser ffmpeg merci de le télécharger (https://ffmpeg.org/download.html
 * La v0.7-GUI donne le % d'avancement du téléchargement !
 * La v0.7-GUI fonctionne avec plus d'un thread ! Grâce à cela nous pouvons continuer à utiliser le programme lors du téléchargement. (Sur les anciennes versions la fenêtre affichier : ne répond pas) Un thread est utilisé pour l'interface graphique, un autre pour l'avancement du téléchargement et un dernier permet de télécharger la vidéo.
 * La v0.7.1-GUI affiche une barre de progression du téléchargement.
+* La v0.7.2-GUI ne ré-encode plus les vidéos. Le processus est bien plus rapide. 
