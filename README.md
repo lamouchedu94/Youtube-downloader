@@ -9,7 +9,7 @@ Youtube_Downloader_limited_without_ffmpeg utilise pytube, mais on ne peut télé
 
 Pour utiliser ffmpeg merci de le télécharger (https://ffmpeg.org/download.html) et mettre les .exe dans le même répertoire que le programme.(les .exe sont : ffmpeg, ffplay et ffprobe) 
 
-⚠️Il faut au minimum la version v10.8.2 de pytube (ou supérieur) pour fonctioner.
+⚠️Il faut au minimum la version v10.8.5 de pytube (ou supérieur) pour fonctioner.
 
 ⚠️Les .exe des versions antérieur à la v0.7.1-GUI ne fonctionne plus ! (pytube pas à jour)
 
