@@ -21,3 +21,6 @@ Pour utiliser ffmpeg merci de le télécharger (https://ffmpeg.org/download.html
 * La v0.7.3-GUI permet de télécharger des vidéos déjà téléchargées directement depuis l'historique !
 * La v0.7.3-GUI écrit les fichier (config et historique) en utf-8. Les lettres accentuées sont désormais supportées.
 * La v0.7.4-GUI permet de télécharger des playlists.
+* La v0.7.6-GUI permet de télécharger des vidéos au format .mp3.
+* La v0.7.6-GUI utilise fichier de config .json.
+* La v0.7.6-GUI a été diviser en plusieurs petit fichiers pour plus de visibilité.
