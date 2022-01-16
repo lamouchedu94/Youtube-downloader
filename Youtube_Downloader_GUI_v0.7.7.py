@@ -57,7 +57,6 @@ def check_ffmpeg():                                             #execute command
     else :
         ffmpeg_not_installed = "False"
     return ffmpeg_not_installed
-check_ffmpeg()
 
 def video_title(url) :
     yt = YouTube(url)
@@ -158,7 +157,6 @@ def checkbutton_mp3(cochee):
           ensure_ascii=False)    
 
 def json_config() :
-
     with open('./config_Yt.json', 'r') as fichier:
         data = json.load(fichier)
         fichier.close
@@ -176,6 +174,19 @@ def get_path() :
     data = json_config()
     path = data["directory"]
     return path
+def get_definition():
+    data = json_config()
+    definition = data["definition"]
+    return definition
+def modif_definition(resol):
+    with open('./config_Yt.json', "r",encoding='utf8') as file :
+            data = json.load(file)
+            data["definition"] = resol
+            file.close()
+    with open('./config_Yt.json', 'w') as fichier:
+        json.dump(data, fichier, sort_keys=False, indent=5,ensure_ascii=False)   
+        file.close()
+    return 0
 
 def low_download(url, video_title, resol):
     chemin = get_path()
@@ -487,6 +498,10 @@ def size(url, resol, entry1, progress, fenetre_principale,titre) :
             youtube = pytube.YouTube(url)
         except :
             break
+        if resol == "":
+            resol = get_definition()
+        else : 
+            modif_definition(resol)
         video = youtube.streams.filter(res=resol).first()
         taille = video.filesize
         chemin = chemin_for_GUI()
@@ -565,6 +580,7 @@ def fenetre_principale() :
         liste.pack(side = LEFT)
     else :
         liste = Listbox(frame_p,selectbackground = "#a7a7a7",bg = "#f9f7f7", width = 6, font=("Arial", 13),borderwidth=0, height = 9)
+        liste.insert(-1, "")
         liste.insert(1, "144p")
         liste.insert(2, "240p")
         liste.insert(3, "360p")
