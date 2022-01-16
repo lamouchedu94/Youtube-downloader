@@ -1,10 +1,10 @@
 # Youtube-downloader (CLI / GUI)
-C'est un projet en python pour télécharger des vidéos Youtube dans toutes les définitions avec le son.
+C'est un projet en python pour télécharger des vidéos Youtube dans toutes les définitions avec le son. (Utilisation de pytube et D'ffmpeg)
 
 Pour télécharger des vidéos en hautes définitions avec le son il faut utiliser ffmpeg ! ffmpeg permet de rassembler la piste audio et la piste vidéo.
-Pour utiliser ffmpeg merci de le télécharger (https://ffmpeg.org/download.html) et mettre les .exe dans le même répertoire que le programme.(les .exe sont : ffmpeg, ffplay et ffprobe) 
+Pour utiliser ffmpeg merci de le télécharger (https://ffmpeg.org/download.html) et mettre les .exe dans le même répertoire que le programme.(les .exe sont : ffmpeg, ffplay et ffprobe (ffmpeg seul suffit)) 
 
-⚠️Il faut au minimum la version  v11.0.0 de pytube (ou supérieur) pour fonctioner.
+⚠️Il faut avoir pytube à jour.
 
 ⚠️Les .exe des versions antérieur à la v11.0.0-GUI ne fonctionne plus ! (pytube pas à jour)
 
@@ -23,4 +23,4 @@ Pour utiliser ffmpeg merci de le télécharger (https://ffmpeg.org/download.html
 * La v0.7.4-GUI permet de télécharger des playlists.
 * La v0.7.6-GUI permet de télécharger des vidéos au format .mp3.
 * La v0.7.6-GUI utilise fichier de config .json.
-* La v0.7.6-GUI a été diviser en plusieurs petit fichiers pour plus de visibilité.
+

@@ -38,6 +38,8 @@ def initialisation():
                 pass
             else :
                 data["history"] = "False"
+            if data["directory"] == "":
+                changement_repertoire_telechargement_GUI()
         with open('./config_Yt.json', 'w') as fichier:
             json.dump(data, fichier, sort_keys=False, indent=5,
               ensure_ascii=False)    
@@ -45,7 +47,7 @@ def initialisation():
         with open("config_Yt.json","a", encoding='utf8') as file :
             file.close
 
-initialisation()
+
 
 def check_ffmpeg():                                             #execute commande ffmpeg -version pour voir si ffmpeg est installé 
     test_ffmpeg = os.system("ffmpeg -version")
@@ -616,6 +618,7 @@ def fenetre_principale() :
     frame_p.pack(expand = YES, padx=0, pady=0)
     fenetre_principale.mainloop()
 
+initialisation()
 fenetre_principale()
 t1 = threading.Thread(target=fenetre_principale())
 t1.start()
