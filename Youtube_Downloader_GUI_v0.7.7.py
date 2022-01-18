@@ -12,12 +12,13 @@ from tkinter import *
 from tkinter.messagebox import *
 from pytube.contrib.playlist import Playlist
 
+
 try :                               #essaye d'importer la librairie ffmpeg
     import ffmpeg
     ffmpeg_install = "False"        
 except :
     print("ffmpeg ne peut pas être importé.")
-    showwarning("ffmpeg Warning", "ffmeg-python n'est pas installé ! vous pourez seulement choisir entre la 360p et la 720p !")
+    showwarning("ffmpeg Warning", "La librairie ffmeg-python n'est pas installé ! vous pourez seulement choisir entre la 360p et la 720p !")
     ffmpeg_install = "True"
 
 
@@ -48,7 +49,6 @@ def initialisation():
             file.close
 
 
-
 def check_ffmpeg():                                             #execute commande ffmpeg -version pour voir si ffmpeg est installé 
     test_ffmpeg = os.system("ffmpeg -version")
     print("\n")
@@ -61,6 +61,9 @@ def check_ffmpeg():                                             #execute command
     return ffmpeg_not_installed
 
 def video_title(url) :
+    """
+    Fonction qui va chercher le titre le titre de la video 
+    """
     yt = YouTube(url)
     titre = yt.title
     for i in range(32) :
@@ -73,6 +76,10 @@ class Download_merge :
         pass
     
     def download_low_def(self, url,resol,chemin,titre) :                        #Télécharger en 360p et 720p uniquement (les autres def n'ont pas d'audio)
+        """
+        Telecharge en 360p ou 720p la video
+        """
+        
         format = get_gpu()
         if format == "False" :
             youtube = pytube.YouTube(url)
@@ -90,7 +97,9 @@ class Download_merge :
                 pass
             shutil.move(chemin_audio,chemin)
     def merge_video_audio(self, titre, chemin, resol) :                   #Utilise ffmpeg pour coller piste audio/vidéo         
-            
+            """
+            Colle la piste audio avec la piste video 
+            """
             format = get_gpu()
             chemin_sans_backslash = chemin.replace("\\","/")
 
@@ -109,6 +118,9 @@ class Download_merge :
                 os.rename(chemin + "\\audio.mp3", chemin + "\\" +titre + ".mp3")
 
     def download_high_def(self, url, resol, chemin,titre) :               #Télécharger dans toutes les définitions sauf 360p et 720p avec audio
+        """
+        Telecharge dans les autres definitions un fichier video et un fichier a part avec le son
+        """
         chemin_audio = chemin + "\\audio_only"
         chemin_video = chemin + "\\video_only"
         format = get_gpu()
@@ -133,6 +145,10 @@ class Download_merge :
         #merge_video_audio(titre, chemin, resol)
 
 def hist(cochee) :
+    """
+    Change l'etat de la variable hist dans le fichier Json
+    """
+    
     #cochee a deux valeurs
     # 0 = False
     # 1 = True 
@@ -148,6 +164,9 @@ def hist(cochee) :
               ensure_ascii=False)    
 
 def checkbutton_mp3(cochee):
+    """
+    Change l'etat de la variable mp3 dans le fichier Json
+    """
     with open('./config_Yt.json', 'r') as fichier:
         data = json.load(fichier)
     if cochee == 1 :
@@ -383,7 +402,12 @@ def playlist(url, resol, entry1, progress, fenetre_principale) :
 
 def history_Yt_txt(url, titre) :
     check = get_history()
-    if check[1] == "history = True\n" :
+    if check == "True" :
+        try :
+            os.stat("history.txt")
+        except :
+            with open("history_Yt.txt", "a") as file :
+                file.close() 
         with open("history_Yt.txt", "r") as file : 
             history = file.readlines()
             provisoire = len(history)
@@ -551,7 +575,7 @@ def fenetre_principale() :
     fenetre_principale.geometry('500x240')
     fenetre_principale.minsize(500, 240)
     fenetre_principale.config(background= '#f9f7f7')
-
+    
     frame_p = Frame(fenetre_principale,bg = '#f9f7f7')
     menubar = Menu(fenetre_principale)
     menu1 = Menu(menubar, tearoff=0)
