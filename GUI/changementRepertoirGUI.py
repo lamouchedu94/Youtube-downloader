@@ -1,6 +1,7 @@
 from tkinter.ttk import *
 from tkinter import *
 from tkinter.messagebox import *
+from Youtube_Downloader_GUI import changement_repertoire,get_path
 
 def changement_repertoire_telechargement_GUI() :            #Fenetre pour chnager le répertoire 
     def intermediaire() : 

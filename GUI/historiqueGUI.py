@@ -2,6 +2,8 @@ from tkinter.ttk import *
 from tkinter import *
 from tkinter.messagebox import *
 
+from Youtube_Downloader_GUI import hist_download
+
 def hist_GUI(entry_url) :
     with open("history_Yt.txt", "r") as file :
         long_hist = file.readlines()
