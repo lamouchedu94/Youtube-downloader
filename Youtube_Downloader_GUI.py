@@ -35,7 +35,7 @@ def video_title(url) :
         titre_modifie = titre.replace(string.punctuation[i], " ")
         titre = titre_modifie
     return titre_modifie
-
+    
 def initialisation():
     '''
     Cette fonction regarde si le fichier de config est correct 
