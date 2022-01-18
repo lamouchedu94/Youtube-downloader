@@ -1,8 +1,7 @@
 from tkinter.ttk import *
 from tkinter import *
 from tkinter.messagebox import *
-
-from Youtube_Downloader_GUI import hist_download
+import Youtube_Downloader_GUI
 
 def hist_GUI(entry_url) :
     with open("history_Yt.txt", "r") as file :
@@ -22,7 +21,7 @@ def hist_GUI(entry_url) :
     nbligne = int(nbligne)
     liste1 = Listbox(frame3,selectbackground = "#a7a7a7",bg = "#f9f7f7", width = 95, font=("Arial", 13),borderwidth=0, height = nbligne)
     ligne = 1
-    button = Button(frame3, text = "Télécharger", font=("Arial", 20),bg = "#a8a8a8", borderwidth=0, fg ='#000000',activebackground = "#f7f7f7",highlightcolor = "#00aeff",command=(lambda *args:(hist_download(liste1.get(ACTIVE), fenetre3, entry_url, long_hist))))                       #après command = mettre fonction
+    button = Button(frame3, text = "Télécharger", font=("Arial", 20),bg = "#a8a8a8", borderwidth=0, fg ='#000000',activebackground = "#f7f7f7",highlightcolor = "#00aeff",command=(lambda *args:(Youtube_Downloader_GUI.hist_download(liste1.get(ACTIVE), fenetre3, entry_url, long_hist))))                       #après command = mettre fonction
     
     try :
         for i in range(len(long_hist)) :

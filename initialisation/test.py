@@ -1,13 +1,11 @@
 import json, os
 from tkinter.messagebox import *
-from GUI.historiqueGUI import *
-from GUI.changementRepertoirGUI import changement_repertoire_telechargement_GUI
+import Youtube_Downloader_GUI, GUI.changementRepertoirGUI
 
 def initialisation():
     '''
     Cette fonction regarde si le fichier de config est correct 
     '''
-    
     try :
         os.stat("./config_Yt.json")
         with open('./config_Yt.json', 'r') as fichier:
@@ -21,7 +19,7 @@ def initialisation():
             else :
                 data["history"] = "False"
             if data["directory"] == "":
-                changement_repertoire_telechargement_GUI()
+                GUI.changementRepertoirGUI.changement_repertoire_telechargement_GUI()
         with open('./config_Yt.json', 'w') as fichier:
             json.dump(data, fichier, sort_keys=False, indent=5,
               ensure_ascii=False)    

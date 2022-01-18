@@ -12,9 +12,10 @@ from tkinter.ttk import *
 from tkinter import *
 from tkinter.messagebox import *
 from pytube.contrib.playlist import Playlist
-from initialisation.test import initialisation, check_ffmpeg
-from GUI.historiqueGUI import hist_GUI
-from GUI.changementRepertoirGUI import changement_repertoire_telechargement_GUI
+from initialisation import test
+from GUI import changementRepertoirGUI, historiqueGUI
+
+
 
 try :                               #essaye d'importer la librairie ffmpeg
     import ffmpeg
@@ -23,9 +24,6 @@ except :
     print("ffmpeg ne peut pas être importé.")
     showwarning("ffmpeg Warning", "La librairie ffmeg-python n'est pas installé ! vous pourez seulement choisir entre la 360p et la 720p !")
     ffmpeg_install = "True"
-
-
-
 
 def video_title(url) :
     """
@@ -481,8 +479,8 @@ def fenetre_principale() :
     menubar = Menu(fenetre_principale)
     menu1 = Menu(menubar, tearoff=0)
 
-    menu1.add_command(label="Changer répertoire téléchargement", command = changement_repertoire_telechargement_GUI)
-    menu1.add_command(label="Consulter historique", command = (lambda *args: (hist_GUI(entry_url) )))
+    menu1.add_command(label="Changer répertoire téléchargement", command =  changementRepertoirGUI.changement_repertoire_telechargement_GUI)
+    menu1.add_command(label="Consulter historique", command = (lambda *args: (historiqueGUI.hist_GUI(entry_url) )))
     menu1.add_separator()
     menu1.add_command(label="Emplacement vidéo", command = open_explorer)
     menu1.add_separator()
@@ -500,7 +498,7 @@ def fenetre_principale() :
     else :
         cochee = IntVar(value= 1)
 
-    if check_ffmpeg() == "True":
+    if test.check_ffmpeg() == "True":
         liste = Listbox(frame_p,selectbackground = "#a7a7a7",bg = "#f9f7f7", width = 6, font=("Arial", 13),borderwidth=0, height = 2)
         liste.insert(1, "360p")
         liste.insert(2, "720p")
@@ -542,8 +540,7 @@ def fenetre_principale() :
     fenetre_principale.config(menu=menubar)
     frame_p.pack(expand = YES, padx=0, pady=0)
     fenetre_principale.mainloop()
-
-initialisation()
+test.initialisation()
 fenetre_principale()
 t1 = threading.Thread(target=fenetre_principale())
 t1.start()

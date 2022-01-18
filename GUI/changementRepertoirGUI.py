@@ -1,14 +1,14 @@
 from tkinter.ttk import *
 from tkinter import *
 from tkinter.messagebox import *
-from Youtube_Downloader_GUI import changement_repertoire,get_path
+import Youtube_Downloader_GUI
 
 def changement_repertoire_telechargement_GUI() :            #Fenetre pour chnager le répertoire 
     def intermediaire() : 
         repertoire = entry2.get()
-        if changement_repertoire(repertoire) == 0:
+        if Youtube_Downloader_GUI.changement_repertoire(repertoire) == 0:
             fenetre2.destroy()
-    path3 = get_path()
+    path3 = Youtube_Downloader_GUI.get_path()
     path3 = str(path3)
     print(path3)
     
