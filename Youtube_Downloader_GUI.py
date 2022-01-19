@@ -4,6 +4,7 @@ https://github.com/lamouchedu94/Youtube-downloader-FR
 Permet de télécharger des vidéos Youtube avec une interface.
 '''
 
+
 from pytube import YouTube
 import pytube, string,time,os,subprocess, threading, json,shutil
 #from tkinter import Tk, Entry, Frame, Label, END, Button, ACTIVE, Checkbutton, IntVar, Listbox, Menu, LEFT, BOTTOM,HO RIGHT, TOP, GROOVE, SOLID, X, Y, YES
@@ -11,6 +12,9 @@ from tkinter.ttk import *
 from tkinter import *
 from tkinter.messagebox import *
 from pytube.contrib.playlist import Playlist
+from initialisation import test
+from GUI import changementRepertoirGUI, historiqueGUI
+
 
 
 try :                               #essaye d'importer la librairie ffmpeg
@@ -21,12 +25,21 @@ except :
     showwarning("ffmpeg Warning", "La librairie ffmeg-python n'est pas installé ! vous pourez seulement choisir entre la 360p et la 720p !")
     ffmpeg_install = "True"
 
-
+def video_title(url) :
+    """
+    Fonction qui va chercher le titre le titre de la video 
+    """
+    yt = YouTube(url)
+    titre = yt.title
+    for i in range(32) :
+        titre_modifie = titre.replace(string.punctuation[i], " ")
+        titre = titre_modifie
+    return titre_modifie
+    
 def initialisation():
     '''
     Cette fonction regarde si le fichier de config est correct 
     '''
-    
     try :
         os.stat("./config_Yt.json")
         with open('./config_Yt.json', 'r') as fichier:
@@ -40,7 +53,7 @@ def initialisation():
             else :
                 data["history"] = "False"
             if data["directory"] == "":
-                changement_repertoire_telechargement_GUI()
+                changementRepertoirGUI.changement_repertoire_telechargement_GUI()
         with open('./config_Yt.json', 'w') as fichier:
             json.dump(data, fichier, sort_keys=False, indent=5,
               ensure_ascii=False)    
@@ -60,16 +73,42 @@ def check_ffmpeg():                                             #execute command
         ffmpeg_not_installed = "False"
     return ffmpeg_not_installed
 
-def video_title(url) :
-    """
-    Fonction qui va chercher le titre le titre de la video 
-    """
-    yt = YouTube(url)
-    titre = yt.title
-    for i in range(32) :
-        titre_modifie = titre.replace(string.punctuation[i], " ")
-        titre = titre_modifie
-    return titre_modifie
+def initialisation():
+    '''
+    Cette fonction regarde si le fichier de config est correct 
+    '''
+    try :
+        os.stat("./config_Yt.json")
+        with open('./config_Yt.json', 'r') as fichier:
+            data = json.load(fichier)
+            if data["mp3_file"] == "False" or data["mp3_file"] == "True"  :
+                pass
+            else :
+                data["mp3_file"] = "False"
+            if data["history"] == "False" or data["history"] == "True" :
+                pass
+            else :
+                data["history"] = "False"
+            if data["directory"] == "":
+                changementRepertoirGUI.changement_repertoire_telechargement_GUI()
+        with open('./config_Yt.json', 'w') as fichier:
+            json.dump(data, fichier, sort_keys=False, indent=5,
+              ensure_ascii=False)    
+    except: 
+        with open("config_Yt.json","a", encoding='utf8') as file :
+            file.close
+
+
+def check_ffmpeg():                                             #execute commande ffmpeg -version pour voir si ffmpeg est installé 
+    test_ffmpeg = os.system("ffmpeg -version")
+    print("\n")
+    if test_ffmpeg == 1 :
+        print("Attention ! ffmpeg n'étant pas installé, les définitions proposées seront seulment : 360p et 720p.")
+        showwarning("ffmpeg Warning", "ffmpeg n'étant pas installé, les définitions proposées seront seulment : 360p et 720p !")
+        ffmpeg_not_installed = "True"
+    else :
+        ffmpeg_not_installed = "False"
+    return ffmpeg_not_installed
 
 class Download_merge :
     def __init__(self) :
@@ -248,72 +287,6 @@ def changement_repertoire(user_path) :                          #permet de chang
         showerror("Erreur", "Le répertoire de téléchargement n'existe pas ! Merci de changer le répertoire dans : fichier > changer répertoire téléchargement.")
         return 1
 
-
-def changement_repertoire_telechargement_GUI() :            #Fenetre pour chnager le répertoire 
-    def intermediaire() : 
-        repertoire = entry2.get()
-        if changement_repertoire(repertoire) == 0:
-            fenetre2.destroy()
-    path3 = get_path()
-    path3 = str(path3)
-    print(path3)
-    
-    fenetre2 = Tk()
-    fenetre2.title("Répertoire téléchargement")
-    fenetre2.geometry('480x250')
-    fenetre2.minsize(480, 250)
-    fenetre2.config(background= '#f9f7f7')
-    frame2 = Frame(fenetre2, bg = '#f9f7f7', borderwidth=0)
-    label_title1 = Label(frame2, text= "Chemin actuel :", font=("Arial", 15), bg = '#f9f7f7', fg ='#000000')
-    label_title1.pack(expand = YES )
-    entry3 = Entry(frame2, text= "", font=("Arial", 14), bg = '#ececec', fg ='#000000', relief = SOLID)                                         #25 = taille police , bg = background texte ,  fg = front ground couleur texte.    On peut soit afficher dans la fenêtre soit dans la frame
-    entry3.pack(expand = YES,fill=X)
-    entry3.delete(0,END)
-    entry3.insert(0, path3)
-    entry3.config(bg = "#f9f7f7")
-    entry3.config(state=DISABLED)
-    label_title = Label(frame2, text= "Entrez le répertoire de téléchargement :", font=("Arial", 15), bg = '#f9f7f7', fg ='#000000')
-    label_title.pack(expand = YES)
-    entry2 = Entry(frame2, text= "", font=("Arial", 14), bg = '#ececec', fg ='#000000', relief = SOLID)                                         #25 = taille police , bg = background texte ,  fg = front ground couleur texte.    On peut soit afficher dans la fenêtre soit dans la frame
-    entry2.pack(expand = YES,fill=X)
-
-    button_confirmation = Button(frame2, text = "Confirmer", font=("Arial", 20),bg = "#a8a8a8", borderwidth=0, fg ='#000000',activebackground = "#f7f7f7",highlightcolor = "#00aeff" ,command = intermediaire)                       #après command = mettre fonction
-    button_confirmation.pack(fill = X, padx=20, pady=40)
-
-    
-    frame2.pack(expand = YES, padx=0, pady=0)
-    fenetre2.mainloop()
-
-def hist_GUI(entry_url) :
-    with open("history_Yt.txt", "r") as file :
-        long_hist = file.readlines()
-        file.close
-    fenetre3 = Tk()
-    fenetre3.title("Historique")
-    fenetre3.geometry("875x400")
-    fenetre3.minsize(300, 200)
-    fenetre3.maxsize(1500, 1500)
-    fenetre3.config(background= '#f9f7f7')
-    frame3 = Frame(fenetre3, bg = '#f9f7f7', borderwidth=0)
-    
-    label_title1 = Label(frame3, text= "Voici l'historique :", font=("Arial", 20), bg = '#f9f7f7', fg ='#000000')          #25 = taille police , bg = background texte ,  fg = front ground couleur texte.    On peut soit afficher dans la fenêtre soit dans la frame
-    label_title1.pack(padx=0, pady=10)
-    nbligne = (len(long_hist)-1) / 2
-    nbligne = int(nbligne)
-    liste1 = Listbox(frame3,selectbackground = "#a7a7a7",bg = "#f9f7f7", width = 95, font=("Arial", 13),borderwidth=0, height = nbligne)
-    ligne = 1
-    button = Button(frame3, text = "Télécharger", font=("Arial", 20),bg = "#a8a8a8", borderwidth=0, fg ='#000000',activebackground = "#f7f7f7",highlightcolor = "#00aeff",command=(lambda *args:(hist_download(liste1.get(ACTIVE), fenetre3, entry_url, long_hist))))                       #après command = mettre fonction
-    
-    try :
-        for i in range(len(long_hist)) :
-            liste1.insert(i, long_hist[ligne])
-            ligne += 2
-    except :
-        pass
-    
-    liste1.pack(expand = YES)
-    button.pack(fill = X)
-    frame3.pack(expand = YES)
 
 def hist_download(nom, fenetre3, entry_url, long_hist) :
     nb_ligne = len(long_hist)
@@ -580,8 +553,8 @@ def fenetre_principale() :
     menubar = Menu(fenetre_principale)
     menu1 = Menu(menubar, tearoff=0)
 
-    menu1.add_command(label="Changer répertoire téléchargement", command = changement_repertoire_telechargement_GUI)
-    menu1.add_command(label="Consulter historique", command = (lambda *args: (hist_GUI(entry_url) )))
+    menu1.add_command(label="Changer répertoire téléchargement", command =  changementRepertoirGUI.changement_repertoire_telechargement_GUI)
+    menu1.add_command(label="Consulter historique", command = (lambda *args: (historiqueGUI.hist_GUI(entry_url) )))
     menu1.add_separator()
     menu1.add_command(label="Emplacement vidéo", command = open_explorer)
     menu1.add_separator()
@@ -641,7 +614,6 @@ def fenetre_principale() :
     fenetre_principale.config(menu=menubar)
     frame_p.pack(expand = YES, padx=0, pady=0)
     fenetre_principale.mainloop()
-
 initialisation()
 fenetre_principale()
 t1 = threading.Thread(target=fenetre_principale())
