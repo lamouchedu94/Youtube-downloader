@@ -11,10 +11,8 @@ import pytube, string,time,os,subprocess, threading, json,shutil
 from tkinter.ttk import *
 from tkinter import *
 from tkinter.messagebox import *
-from pytube.contrib.playlist import Playlist
-from initialisation import test
-from GUI import changementRepertoirGUI, historiqueGUI
-
+from pytube.contrib.playlist import Playlist 
+import GUI.historiqueGUI, Youtube_Downloader_GUI, Telechargement.video
 
 
 try :                               #essaye d'importer la librairie ffmpeg
@@ -53,7 +51,7 @@ def initialisation():
             else :
                 data["history"] = "False"
             if data["directory"] == "":
-                changementRepertoirGUI.changement_repertoire_telechargement_GUI()
+                changement_repertoire_telechargement_GUI()
         with open('./config_Yt.json', 'w') as fichier:
             json.dump(data, fichier, sort_keys=False, indent=5,
               ensure_ascii=False)    
@@ -61,6 +59,9 @@ def initialisation():
         with open("config_Yt.json","a", encoding='utf8') as file :
             file.close
 
+
+
+    
 
 def check_ffmpeg():                                             #execute commande ffmpeg -version pour voir si ffmpeg est installé 
     test_ffmpeg = os.system("ffmpeg -version")
@@ -90,7 +91,7 @@ def initialisation():
             else :
                 data["history"] = "False"
             if data["directory"] == "":
-                changementRepertoirGUI.changement_repertoire_telechargement_GUI()
+                changement_repertoire_telechargement_GUI()
         with open('./config_Yt.json', 'w') as fichier:
             json.dump(data, fichier, sort_keys=False, indent=5,
               ensure_ascii=False)    
@@ -110,78 +111,7 @@ def check_ffmpeg():                                             #execute command
         ffmpeg_not_installed = "False"
     return ffmpeg_not_installed
 
-class Download_merge :
-    def __init__(self) :
-        pass
-    
-    def download_low_def(self, url,resol,chemin,titre) :                        #Télécharger en 360p et 720p uniquement (les autres def n'ont pas d'audio)
-        """
-        Telecharge en 360p ou 720p la video
-        """
-        
-        format = get_gpu()
-        if format == "False" :
-            youtube = pytube.YouTube(url)
-            video = youtube.streams.filter(res=resol).first()
-            video.download(chemin,filename= video_title(url)+ ".mp4")
-        else :
-            chemin_audio = chemin + "\\audio_only"
-            youtube = pytube.YouTube(url)
-            t=youtube.streams.filter(only_audio=True).all()
-            t[0].download(chemin_audio, filename= titre + ".mp3")
-            
-            try :
-                os.remove(chemin + "\\" +titre + ".mp3")
-            except :
-                pass
-            shutil.move(chemin_audio,chemin)
-    def merge_video_audio(self, titre, chemin, resol) :                   #Utilise ffmpeg pour coller piste audio/vidéo         
-            """
-            Colle la piste audio avec la piste video 
-            """
-            format = get_gpu()
-            chemin_sans_backslash = chemin.replace("\\","/")
 
-            if format == "False" :
-                input_video = ffmpeg.input(chemin_sans_backslash+'/video_only/video.mp4')
-                input_audio = ffmpeg.input(chemin_sans_backslash+'/audio_only/audio.mp3')
-                ffmpeg.output(input_video, input_audio, chemin_sans_backslash + "/" + titre + '.mp4', codec='copy').run()
-            else :
-                input_audio = chemin_sans_backslash+'/audio_only/audio.mp3'
-                #input_audio = input_audio.replace("/","\\")
-                shutil.move(input_audio,chemin)
-                try :
-                    os.remove(chemin + "\\" +titre + ".mp3")
-                except :
-                    pass
-                os.rename(chemin + "\\audio.mp3", chemin + "\\" +titre + ".mp3")
-
-    def download_high_def(self, url, resol, chemin,titre) :               #Télécharger dans toutes les définitions sauf 360p et 720p avec audio
-        """
-        Telecharge dans les autres definitions un fichier video et un fichier a part avec le son
-        """
-        chemin_audio = chemin + "\\audio_only"
-        chemin_video = chemin + "\\video_only"
-        format = get_gpu()
-        youtube = pytube.YouTube(url)
-        video = youtube.streams.filter(res=resol).first()
-        try :
-            if format == "False" :
-                video.download(chemin_video, filename= "video.mp4")
-        except  :
-            if format == "False" :
-                print("Erreur : Essayez de changer la définition.")
-                showerror("Erreur", "la définition demandé n'existe pas pour cette vidéo. La définition choisie par défaut est 144p.")
-                video = youtube.streams.filter(res="144p").first()
-                video.download(chemin_video, filename= "video.mp4")
-
-        youtube = pytube.YouTube(url)
-        t=youtube.streams.filter(only_audio=True).all()
-        t[0].download(chemin_audio, filename= "audio.mp3")
-
-        print("début de l'assemblage des pistes.")
-        time.sleep(2)
-        #merge_video_audio(titre, chemin, resol)
 
 def hist(cochee) :
     """
@@ -286,6 +216,41 @@ def changement_repertoire(user_path) :                          #permet de chang
     except :
         showerror("Erreur", "Le répertoire de téléchargement n'existe pas ! Merci de changer le répertoire dans : fichier > changer répertoire téléchargement.")
         return 1
+def changement_repertoire_telechargement_GUI() :            #Fenetre pour chnager le répertoire 
+    def intermediaire() : 
+        repertoire = entry2.get()
+        if Youtube_Downloader_GUI.changement_repertoire(repertoire) == 0:
+            fenetre2.destroy()
+    path3 = Youtube_Downloader_GUI.get_path()
+    path3 = str(path3)
+    print(path3)
+    
+    fenetre2 = Tk()
+    fenetre2.title("Répertoire téléchargement")
+    fenetre2.geometry('480x250')
+    fenetre2.minsize(480, 250)
+    fenetre2.config(background= '#f9f7f7')
+    frame2 = Frame(fenetre2, bg = '#f9f7f7', borderwidth=0)
+    label_title1 = Label(frame2, text= "Chemin actuel :", font=("Arial", 15), bg = '#f9f7f7', fg ='#000000')
+    label_title1.pack(expand = YES )
+    entry3 = Entry(frame2, text= "", font=("Arial", 14), bg = '#ececec', fg ='#000000', relief = SOLID)                                         #25 = taille police , bg = background texte ,  fg = front ground couleur texte.    On peut soit afficher dans la fenêtre soit dans la frame
+    entry3.pack(expand = YES,fill=X)
+    entry3.delete(0,END)
+    entry3.insert(0, path3)
+    entry3.config(bg = "#f9f7f7")
+    entry3.config(state=DISABLED)
+    label_title = Label(frame2, text= "Entrez le répertoire de téléchargement :", font=("Arial", 15), bg = '#f9f7f7', fg ='#000000')
+    label_title.pack(expand = YES)
+    entry2 = Entry(frame2, text= "", font=("Arial", 14), bg = '#ececec', fg ='#000000', relief = SOLID)                                         #25 = taille police , bg = background texte ,  fg = front ground couleur texte.    On peut soit afficher dans la fenêtre soit dans la frame
+    entry2.pack(expand = YES,fill=X)
+
+    button_confirmation = Button(frame2, text = "Confirmer", font=("Arial", 20),bg = "#a8a8a8", borderwidth=0, fg ='#000000',activebackground = "#f7f7f7",highlightcolor = "#00aeff" ,command = intermediaire)                       #après command = mettre fonction
+    button_confirmation.pack(fill = X, padx=20, pady=40)
+
+    
+    frame2.pack(expand = YES, padx=0, pady=0)
+    fenetre2.mainloop()
+
 
 
 def hist_download(nom, fenetre3, entry_url, long_hist) :
@@ -324,7 +289,7 @@ def alerte_chemin_deja_existant():
         return("False")
 
 def playlist(url, resol, entry1, progress, fenetre_principale) :
-    Download_m = Download_merge()
+    Download_m = Telechargement.video.Download_merge()
     p = Playlist(url)
     showinfo("Début","Il y a "+ str(len(p)) + " vidéo dans la playlist")
     chemin = chemin_for_GUI()
@@ -394,7 +359,7 @@ def history_Yt_txt(url, titre) :
             file.write("\n"+titre +"\n"+ url )
 
 def definition_user_choice_and_download(url, resol, entry1, progress, fenetre_principale):                      #appel toutes les fonctions
-    Download_m = Download_merge()
+    Download_m = Telechargement.video.Download_merge()
     while True :                                                             #Récupérer le choix de l'utulisateur dans la liste.
         if url == "" :
             break
@@ -553,8 +518,8 @@ def fenetre_principale() :
     menubar = Menu(fenetre_principale)
     menu1 = Menu(menubar, tearoff=0)
 
-    menu1.add_command(label="Changer répertoire téléchargement", command =  changementRepertoirGUI.changement_repertoire_telechargement_GUI)
-    menu1.add_command(label="Consulter historique", command = (lambda *args: (historiqueGUI.hist_GUI(entry_url) )))
+    menu1.add_command(label="Changer répertoire téléchargement", command =  changement_repertoire_telechargement_GUI)
+    menu1.add_command(label="Consulter historique", command = (lambda *args: (GUI.historiqueGUI.hist_GUI(entry_url) )))
     menu1.add_separator()
     menu1.add_command(label="Emplacement vidéo", command = open_explorer)
     menu1.add_separator()

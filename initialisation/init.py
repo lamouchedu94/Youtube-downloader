@@ -1,6 +1,6 @@
 import json, os
 from tkinter.messagebox import *
-import Youtube_Downloader_GUI, GUI.changementRepertoirGUI
+import Youtube_Downloader_GUI, Youtube_Downloader_GUI
 
 def initialisation():
     '''
@@ -19,7 +19,7 @@ def initialisation():
             else :
                 data["history"] = "False"
             if data["directory"] == "":
-                GUI.changementRepertoirGUI.changement_repertoire_telechargement_GUI()
+                Youtube_Downloader_GUI.changement_repertoire_telechargement_GUI()
         with open('./config_Yt.json', 'w') as fichier:
             json.dump(data, fichier, sort_keys=False, indent=5,
               ensure_ascii=False)    
