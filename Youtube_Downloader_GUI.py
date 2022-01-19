@@ -90,7 +90,7 @@ def initialisation():
             else :
                 data["history"] = "False"
             if data["directory"] == "":
-                GUI.changementRepertoirGUI.changement_repertoire_telechargement_GUI()
+                changementRepertoirGUI.changement_repertoire_telechargement_GUI()
         with open('./config_Yt.json', 'w') as fichier:
             json.dump(data, fichier, sort_keys=False, indent=5,
               ensure_ascii=False)    
