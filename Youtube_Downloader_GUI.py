@@ -25,7 +25,7 @@ except :
 
 def video_title(url) :
     """
-    Fonction qui va chercher le titre le titre de la video, renvoie le nom de la video sans les caractères spéciaux.
+    Fonction qui va chercher le titre le titre de la video 
     """
     yt = YouTube(url)
     titre = yt.title
