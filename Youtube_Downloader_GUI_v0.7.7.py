@@ -39,13 +39,13 @@ def initialisation():
             else :
                 data["history"] = "False"
         with open('./config_Yt.json', 'w') as fichier:
-            json.dump(data, fichier, sort_keys=False, indent=5,
-              ensure_ascii=False)    
+            json.dump(data, fichier, sort_keys=False, indent=5,ensure_ascii=False) 
+            fichier.close()
+        if data["directory"] == "" :
+            changement_repertoire_telechargement_GUI()             
     except: 
         with open("config_Yt.json","a", encoding='utf8') as file :
             file.close
-
-initialisation()
 
 def check_ffmpeg():                                             #execute commande ffmpeg -version pour voir si ffmpeg est installé 
     test_ffmpeg = os.system("ffmpeg -version")
@@ -203,15 +203,15 @@ def high_download(url, resol):
 def changement_repertoire(user_path) :                          #permet de changer de répertoire après validation sur l'interface graphique
     try :
         os.stat(user_path)
-        with open('./config_Yt.json', "r",encoding='utf8') as file :
-            data = json.load(file)
+        with open('./config_Yt.json', "r") as fichier :
+            data = json.load(fichier)
+            print(user_path)
             data["directory"] = user_path
-            file.close()
         with open('./config_Yt.json', 'w') as fichier:
             json.dump(data, fichier, sort_keys=False, indent=5,ensure_ascii=False)   
-            file.close()
+            fichier.close()
         showinfo("info", "Le répertoire à bien été définit.")
-        return 0
+        return user_path
     except :
         showerror("Erreur", "Le répertoire de téléchargement n'existe pas ! Merci de changer le répertoire dans : fichier > changer répertoire téléchargement.")
         return 1
@@ -220,8 +220,9 @@ def changement_repertoire(user_path) :                          #permet de chang
 def changement_repertoire_telechargement_GUI() :            #Fenetre pour chnager le répertoire 
     def intermediaire() : 
         repertoire = entry2.get()
-        if changement_repertoire(repertoire) == 0:
+        if changement_repertoire(repertoire) != 1:
             fenetre2.destroy()
+            return repertoire
     path3 = get_path()
     path3 = str(path3)
     print(path3)
@@ -410,6 +411,16 @@ def definition_user_choice_and_download(url, resol, entry1, progress, fenetre_pr
                 break
         except :
             pass
+        try :
+            chemin_audio = chemin+"\\"+titre+".mp3"
+            os.stat(chemin_audio)
+            result = alerte_chemin_deja_existant()
+            if result == "True" :
+                os.remove(chemin_audio)
+            if result == "False" :
+                break
+        except :
+            pass
         t3 = threading.Thread(target=size, args=(url,resol, entry1, progress, fenetre_principale,titre))
         t3.start()
         
@@ -519,7 +530,7 @@ def size(url, resol, entry1, progress, fenetre_principale,titre) :
                     pourcentage = 0
                     progress['value']= pourcentage
                     entry1.delete(0, END)
-                    entry1.insert(0, "Téléchargement terminé. Merci de patienter.")
+                    entry1.insert(0, "Merci de patienter")
                     entry1.config(bg = '#f9f7f7', fg ='#000000',borderwidth=0)
                     break
             except :
@@ -599,7 +610,7 @@ def fenetre_principale() :
     fenetre_principale.config(menu=menubar)
     frame_p.pack(expand = YES, padx=0, pady=0)
     fenetre_principale.mainloop()
-
+initialisation()
 fenetre_principale()
 t1 = threading.Thread(target=fenetre_principale())
 t1.start()
